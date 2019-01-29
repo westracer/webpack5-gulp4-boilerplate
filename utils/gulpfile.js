@@ -37,9 +37,9 @@ const onBuild = (done) => {
         const cacheKey = Object.keys(require.cache).find((value, index, obj) => {
             return value.indexOf(WEBPACK_CONFIG_FILE) !== -1;
         });
-        if (cacheKey) {
-            delete require.cache[cacheKey];
-        }
+
+        if (cacheKey) delete require.cache[cacheKey];
+
         const webpackConfig = require('./' + WEBPACK_CONFIG_FILE);
         process.chdir(BASE_PATH);
 
