@@ -25,5 +25,5 @@
     "loader": "^2.1.1",
     "uglifyjs-webpack-plugin": "^2.1.1",
     "webpack": "^5.0.0-alpha.9"
-  },
+  }
 }
