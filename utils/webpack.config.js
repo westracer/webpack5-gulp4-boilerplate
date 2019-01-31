@@ -44,27 +44,32 @@ let config = {
             }
         ]
     },
-    plugins: [new UglifyJsPlugin({
-        parallel: true,
-        uglifyOptions: {
-            mangle: true,
-            compress: {
-                sequences: true,
-                dead_code: true,
-                conditionals: true,
-                booleans: true,
-                unused: true,
-                if_return: true,
-                join_vars: true,
-                drop_console: true
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery"
+        }),
+        new UglifyJsPlugin({
+            parallel: true,
+            uglifyOptions: {
+                mangle: true,
+                compress: {
+                    sequences: true,
+                    dead_code: true,
+                    conditionals: true,
+                    booleans: true,
+                    unused: true,
+                    if_return: true,
+                    join_vars: true,
+                    drop_console: true
+                },
+                toplevel: true,
+                output: {
+                    comments: false,
+                },
+                keep_fnames: false,
             },
-            toplevel: true,
-            output: {
-                comments: false,
-            },
-            keep_fnames: false,
-        },
-    })],
+        })],
     optimization: {
         splitChunks: {
             chunks: 'initial',
@@ -73,7 +78,12 @@ let config = {
                 chunks: 'async',
                 minSize: '30000',
                 maxSize: '0',
-                minChunks: '2',
+                minChunks: '1',
+                vendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all'
+                },
                 common: {
                     name: 'common',
                     minChunks: 2,
