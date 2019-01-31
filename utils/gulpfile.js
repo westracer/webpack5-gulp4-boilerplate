@@ -33,6 +33,8 @@ gulp.task('less', () => {
 
 const onBuild = (done) => {
     return new Promise((resolve, reject) => {
+
+        // removing require cache to get webpack config with new entries
         process.chdir(UTILS_PATH);
         const cacheKey = Object.keys(require.cache).find((value, index, obj) => {
             return value.indexOf(WEBPACK_CONFIG_FILE) !== -1;
@@ -46,21 +48,17 @@ const onBuild = (done) => {
         const compiler = webpack(webpackConfig);
         compiler.run((err, stats) => {
             if (err) {
-                gutil.log('Error', err);
-                if (done) {
-                    done();
-                }
+                gutil.log('Error', c.red(err));
             } else {
                 Object.keys(stats.compilation.assets).forEach((key) => {
                     gutil.log('Webpack output', c.green(key));
                 });
-
-                if (done) {
-                    done();
-                }
             }
 
             resolve();
+            if (done) {
+                done();
+            }
         });
     });
 };
@@ -68,7 +66,7 @@ const onBuild = (done) => {
 gulp.task('clean-bundle', () => {
     return gulp.src('./src/js/bundle/*.bundle.js')
         .pipe(clean({force: true}))
-        .on('end', () => { gutil.log(c.red('Bundle folder cleared')); });
+        .on('end', () => { gutil.log(c.yellow('Bundle folder cleared')); });
 });
 
 gulp.task('webpack', (done) => {
@@ -77,7 +75,7 @@ gulp.task('webpack', (done) => {
 
 gulp.task('watch', () => {
     gulp.watch('./src/css/**/*.less', gulp.series('less'));
-    gulp.watch(['./src/js/**/*.js', '!./src/js/bundle/*.js'], gulp.series('clean-bundle', 'webpack'));
+    gulp.watch(['./src/js/**/*.js', '!./src/js/bundle/*.js'], gulp.series('webpack'));
 });
 
 gulp.task('default', gulp.series('less', 'clean-bundle', 'webpack', 'watch'));

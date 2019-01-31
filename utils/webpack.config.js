@@ -23,7 +23,7 @@ const getEntries = () => {
 
 let config = {
     mode: "development",
-    // mode: "production",
+    // mode: "production", // TODO: use process env and create 'build' task
     entry: getEntries(),
     context: __dirname,
     output: {
